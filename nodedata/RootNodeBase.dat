@@ -30,38 +30,38 @@ param TruckVolume := 15000;
 
 param ProductVolume :=
 p1 0.09
-p2 0.05
+p2 0.02
 p3 0.08
 ;
 
 param ProductWeight :=
-p1 0.98
-p2 0.93
-p3 0.98
+p1 0.97
+p2 0.98
+p3 0.94
 ;
 
 param VendorFixedTransportCost :=
-v1 217.05
-v2 253.17
-v3 97.5
+v1 253.17
+v2 97.5
+v3 401.77
 ;
 
 param VendorVariableTransportCost :=
-v1 0.061
-v2 0.067
-v3 0.042
+v1 0.067
+v2 0.042
+v3 0.09
 ;
 
 param StoreFixedTransportCost :=
-s1 217.05
+s1 110.96
 s2 66.13
-s3 66.13
+s3 143.71
 ;
 
 param StoreVariableTransportCost :=
-s1 0.061
+s1 0.045
 s2 0.034
-s3 0.034
+s3 0.05
 ;
 
 param ProductHoldingCostWarhouse :=
@@ -88,7 +88,7 @@ p2 0.1
 p3 0.1
 ;
 
-param FullTimeLaborCost := 600; 
+param FullTimeLaborCost := 744; 
 
 param PartTimeLaborCost := 168; 
 

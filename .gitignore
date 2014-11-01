@@ -55,3 +55,6 @@ target/
 
 # Temp files
 temp*
+
+# Pyomo .dat files
+*.dat
