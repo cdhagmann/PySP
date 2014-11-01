@@ -1,0 +1,43 @@
+set Stages := FirstStage SecondStage;
+
+set Nodes := RootNode Scenario1Node Scenario2Node Scenario3Node Scenario4Node Scenario5Node;
+
+param NodeStage :=
+RootNode FirstStage
+Scenario1Node SecondStage
+Scenario2Node SecondStage
+Scenario3Node SecondStage
+Scenario4Node SecondStage
+Scenario5Node SecondStage
+;
+
+set Children[RootNode] := Scenario1Node Scenario2Node Scenario3Node Scenario4Node Scenario5Node;
+
+param ConditionalProbability :=
+RootNode 1
+Scenario1Node 0.2
+Scenario2Node 0.2
+Scenario3Node 0.2
+Scenario4Node 0.2
+Scenario5Node 0.2
+;
+
+set Scenarios := k1 k2 k3 k4 k5;
+
+param ScenarioLeafNode :=
+k1 Scenario1Node
+k2 Scenario2Node
+k3 Scenario3Node
+k4 Scenario4Node
+k5 Scenario5Node
+;
+
+param StageCostVariable :=
+FirstStage FirstStageCost
+SecondStage SecondStageCost
+;
+
+param ScenarioBasedData := False; 
+
+set StageVariables[FirstStage] := 	PutawayFullTimeWorkers
+									PickingFullTimeWorkers;

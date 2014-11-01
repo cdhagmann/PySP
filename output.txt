@@ -1,0 +1,101 @@
+Loading scenario and instance data
+Constructing reference model and instance
+Constructing scenario tree instance
+Constructing scenario tree object
+Scenario Tree Detail
+----------------------------------------------------
+Tree Nodes:
+
+	Name=RootNode
+	Stage=FirstStage
+	Parent=None
+	Conditional probability=1.0000
+	Children:
+		Scenario1Node
+		Scenario2Node
+	Scenarios:
+		k1
+		k2
+
+	Name=Scenario1Node
+	Stage=SecondStage
+	Parent=RootNode
+	Conditional probability=0.5000
+	Children:
+		None
+	Scenarios:
+		k1
+
+	Name=Scenario2Node
+	Stage=SecondStage
+	Parent=RootNode
+	Conditional probability=0.5000
+	Children:
+		None
+	Scenarios:
+		k2
+
+----------------------------------------------------
+Stages:
+	Name=FirstStage
+	Tree Nodes: 
+		RootNode
+	Variables: 
+		 PickingFullTimeWorkers : [] 
+		 PutawayFullTimeWorkers : [] 
+	Cost Variable: 
+		FirstStageCost
+
+	Name=SecondStage
+	Tree Nodes: 
+		Scenario1Node
+		Scenario2Node
+	Variables: 
+		 PickingPartTimeWorkers : [*] 
+		 ProductBacklogStore : [*,*,*] 
+		 ProductInboundWarehouse : [*,*,*] 
+		 ProductInventoryStore : [*,*,*] 
+		 ProductInventoryWarehouse : [*,*] 
+		 ProductOutboundWarehouse : [*,*,*] 
+		 PutawayPartTimeWorkers : [*] 
+		 ShipmentsToStore : [*,*] 
+		 ShipmentsWarehouse : [*,*] 
+	Cost Variable: 
+		SecondStageCost
+
+----------------------------------------------------
+Scenarios:
+	Name=k1
+	Probability=0.5000
+	Leaf node=Scenario1Node
+	Tree node sequence:
+		RootNode
+		Scenario1Node
+
+	Name=k2
+	Probability=0.5000
+	Leaf node=Scenario2Node
+	Tree node sequence:
+		RootNode
+		Scenario2Node
+
+----------------------------------------------------
+Scenario tree is valid!
+Node-based instance initialization enabled
+Node-based instance initialization enabled
+Creating instance for scenario=k1
+Node data for scenario=k1 partially loading from file=nodedata/RootNode.dat
+Node data for scenario=k1 partially loading from file=nodedata/Scenario1Node.dat
+Node-based instance initialization enabled
+Creating instance for scenario=k2
+Node data for scenario=k2 partially loading from file=nodedata/RootNode.dat
+Node data for scenario=k2 partially loading from file=nodedata/Scenario2Node.dat
+Time to construct scenario instances=1.00 seconds
+Creating extensive form binding instance
+Creating variables for master binding instance
+Time to construct extensive form instance=0.00 seconds
+Starting to write extensive form
+Output file written to file= efout.lp
+Time to write output file=0.20 seconds
+Time to create and write the extensive form=1.20 seconds
+Queuing extensive form solve

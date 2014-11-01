@@ -1,0 +1,96 @@
+# Case of size [3,3,3,3,3,3,5]
+
+set STORES := s1 s2 s3;
+
+set VENDORS := v1 v2 v3;
+
+set PRODUCTS := p1 p2 p3;
+
+set TIMES := t1 t2 t3;
+
+param T_minus_One :=
+t1 t2
+t2 t3
+t3 t1
+;
+
+param PutawayAverageWorkload := 45000; 
+
+param PickingAverageWorkload := 30000; 
+
+param FractionalFullTimeLoad := 1; 
+
+param MaxWorkerRatio := 1.0; 
+
+param PutawayProductivityRatio := 1.0; 
+
+param PickingProductivityRatio := 1.0; 
+
+param TruckVolume := 15000; 
+
+param ProductVolume :=
+p1 0.09
+p2 0.05
+p3 0.08
+;
+
+param ProductWeight :=
+p1 0.98
+p2 0.93
+p3 0.98
+;
+
+param VendorFixedTransportCost :=
+v1 217.05
+v2 253.17
+v3 97.5
+;
+
+param VendorVariableTransportCost :=
+v1 0.061
+v2 0.067
+v3 0.042
+;
+
+param StoreFixedTransportCost :=
+s1 217.05
+s2 66.13
+s3 66.13
+;
+
+param StoreVariableTransportCost :=
+s1 0.061
+s2 0.034
+s3 0.034
+;
+
+param ProductHoldingCostWarhouse :=
+p1 0.05
+p2 0.05
+p3 0.05
+;
+
+param ProductHoldingCostStore :=
+s1 p1 0.05
+s1 p2 0.05
+s1 p3 0.05
+s2 p1 0.05
+s2 p2 0.05
+s2 p3 0.05
+s3 p1 0.05
+s3 p2 0.05
+s3 p3 0.05
+;
+
+param ProductBacklogCost :=
+p1 0.1
+p2 0.1
+p3 0.1
+;
+
+param FullTimeLaborCost := 600; 
+
+param PartTimeLaborCost := 168; 
+
+param M := 1000; 
+

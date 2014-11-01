@@ -1,0 +1,128 @@
+# Case of size [5,5,5,15,15,3,10]
+
+set STORES := s1 s2 s3 s4 s5;
+
+set VENDORS := v1 v2 v3 v4 v5;
+
+set PRODUCTS := p1 p2 p3 p4 p5;
+
+set TIMES := t1 t2 t3;
+
+param T_minus_One :=
+t1 t2
+t2 t3
+t3 t1
+;
+
+param PutawayAverageWorkload := 45000; 
+
+param PickingAverageWorkload := 30000; 
+
+param FractionalFullTimeLoad := 1; 
+
+param MaxWorkerRatio := 1.0; 
+
+param PutawayProductivityRatio := 1.0; 
+
+param PickingProductivityRatio := 1.0; 
+
+param TruckVolume := 15000; 
+
+param ProductVolume :=
+p1 0.03
+p2 0.07
+p3 0.1
+p4 0.03
+p5 0.08
+;
+
+param ProductWeight :=
+p1 0.99
+p2 0.94
+p3 0.95
+p4 0.98
+p5 0.9
+;
+
+param VendorFixedTransportCost :=
+v1 143.71
+v2 143.71
+v3 97.5
+v4 468.61
+v5 468.61
+;
+
+param VendorVariableTransportCost :=
+v1 0.05
+v2 0.05
+v3 0.042
+v4 0.099
+v5 0.099
+;
+
+param StoreFixedTransportCost :=
+s1 66.13
+s2 75.28
+s3 253.17
+s4 75.28
+s5 297.11
+;
+
+param StoreVariableTransportCost :=
+s1 0.034
+s2 0.036
+s3 0.067
+s4 0.036
+s5 0.074
+;
+
+param ProductHoldingCostWarhouse :=
+p1 0.05
+p2 0.05
+p3 0.05
+p4 0.05
+p5 0.05
+;
+
+param ProductHoldingCostStore :=
+s1 p1 0.05
+s1 p2 0.05
+s1 p3 0.05
+s1 p4 0.05
+s1 p5 0.05
+s2 p1 0.05
+s2 p2 0.05
+s2 p3 0.05
+s2 p4 0.05
+s2 p5 0.05
+s3 p1 0.05
+s3 p2 0.05
+s3 p3 0.05
+s3 p4 0.05
+s3 p5 0.05
+s4 p1 0.05
+s4 p2 0.05
+s4 p3 0.05
+s4 p4 0.05
+s4 p5 0.05
+s5 p1 0.05
+s5 p2 0.05
+s5 p3 0.05
+s5 p4 0.05
+s5 p5 0.05
+;
+
+param ProductBacklogCost :=
+p1 0.1
+p2 0.1
+p3 0.1
+p4 0.1
+p5 0.1
+;
+
+param FullTimeLaborCost := 200; 
+
+param PartTimeLaborCost := 120; 
+
+param M := 1000; 
+

@@ -1,0 +1,8 @@
+param PutawayRate := 1689; 
+
+param PickingRate := 2206; 
+
+param PutawayTechCost := 8383; 
+
+param PickingTechCost := 8840; 
+

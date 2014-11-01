@@ -1,0 +1,32 @@
+# Demand data for Scenario 3
+
+param Demand :=
+s1 p1 t1 728
+s1 p1 t2 637
+s1 p1 t3 637
+s1 p2 t1 575
+s1 p2 t2 719
+s1 p2 t3 719
+s1 p3 t1 670
+s1 p3 t2 754
+s1 p3 t3 754
+s2 p1 t1 907
+s2 p1 t2 1020
+s2 p1 t3 893
+s2 p2 t1 1066
+s2 p2 t2 1199
+s2 p2 t3 1499
+s2 p3 t1 936
+s2 p3 t2 936
+s2 p3 t3 819
+s3 p1 t1 613
+s3 p1 t2 690
+s3 p1 t3 518
+s3 p2 t1 885
+s3 p2 t2 996
+s3 p2 t3 996
+s3 p3 t1 1257
+s3 p3 t2 1257
+s3 p3 t3 1571
+;
+

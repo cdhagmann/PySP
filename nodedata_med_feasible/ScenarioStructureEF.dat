@@ -1,0 +1,10 @@
+set StageVariables[SecondStage] := PutawayPartTimeWorkers[*]
+									PickingPartTimeWorkers[*]
+									ShipmentsWarehouse[*,*]
+									ShipmentsToStore[*,*]
+									ProductInboundWarehouse[*,*,*]
+									ProductOutboundWarehouse[*,*,*]
+									ProductInventoryWarehouse[*,*]
+									ProductInventoryStore[*,*,*]
+									ProductBacklogStore[*,*,*];
+
