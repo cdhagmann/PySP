@@ -6,12 +6,12 @@ set VENDORS := v1 v2 v3;
 
 set PRODUCTS := p1 p2 p3;
 
-set TIMES := t1 t2 t3;
+set TIMES := 1 2 3;
 
 param T_minus_One :=
-t1 t2
-t2 t3
-t3 t1
+1 2
+2 3
+3 1
 ;
 
 param PutawayAverageWorkload := 45000; 
@@ -30,38 +30,38 @@ param TruckVolume := 15000;
 
 param ProductVolume :=
 p1 0.09
-p2 0.02
-p3 0.08
+p2 0.04
+p3 0.05
 ;
 
 param ProductWeight :=
-p1 0.97
-p2 0.98
-p3 0.94
+p1 0.99
+p2 0.95
+p3 0.98
 ;
 
 param VendorFixedTransportCost :=
-v1 253.17
-v2 97.5
-v3 401.77
+v1 217.05
+v2 110.96
+v3 110.96
 ;
 
 param VendorVariableTransportCost :=
-v1 0.067
-v2 0.042
-v3 0.09
+v1 0.061
+v2 0.045
+v3 0.045
 ;
 
 param StoreFixedTransportCost :=
-s1 110.96
-s2 66.13
-s3 143.71
+s1 143.71
+s2 253.17
+s3 45.59
 ;
 
 param StoreVariableTransportCost :=
-s1 0.045
-s2 0.034
-s3 0.05
+s1 0.05
+s2 0.067
+s3 0.027
 ;
 
 param ProductHoldingCostWarhouse :=
@@ -88,49 +88,49 @@ p2 0.1
 p3 0.1
 ;
 
-param FullTimeLaborCost := 744; 
+param FullTimeLaborCost := 816; 
 
 param PartTimeLaborCost := 168; 
 
 param M := 1000; 
 
-param PutawayRate := 342; 
+param PutawayRate := 647; 
 
-param PickingRate := 624; 
+param PickingRate := 568; 
 
-param PutawayTechCost := 7728; 
+param PutawayTechCost := 9987; 
 
-param PickingTechCost := 9560; 
+param PickingTechCost := 9599; 
 
 # Demand data for Scenario 1
 
 param Demand :=
-s1 p1 t1 770
-s1 p1 t2 770
-s1 p1 t3 578
-s1 p2 t1 639
-s1 p2 t2 719
-s1 p2 t3 809
-s1 p3 t1 1067
-s1 p3 t2 1334
-s1 p3 t3 1668
-s2 p1 t1 786
-s2 p1 t2 884
-s2 p1 t3 1106
-s2 p2 t1 392
-s2 p2 t2 490
-s2 p2 t3 612
-s2 p3 t1 465
-s2 p3 t2 407
-s2 p3 t3 356
-s3 p1 t1 839
-s3 p1 t2 734
-s3 p1 t3 551
-s3 p2 t1 467
-s3 p2 t2 409
-s3 p2 t3 307
-s3 p3 t1 258
-s3 p3 t2 258
-s3 p3 t3 226
+s1 p1 1 989
+s1 p1 2 865
+s1 p1 3 865
+s1 p2 1 761
+s1 p2 2 761
+s1 p2 3 571
+s1 p3 1 795
+s1 p3 2 596
+s1 p3 3 671
+s2 p1 1 691
+s2 p1 2 777
+s2 p1 3 777
+s2 p2 1 716
+s2 p2 2 537
+s2 p2 3 605
+s2 p3 1 1004
+s2 p3 2 1004
+s2 p3 3 879
+s3 p1 1 517
+s3 p1 2 388
+s3 p1 3 388
+s3 p2 1 605
+s3 p2 2 756
+s3 p2 3 851
+s3 p3 1 897
+s3 p3 2 897
+s3 p3 3 785
 ;
 

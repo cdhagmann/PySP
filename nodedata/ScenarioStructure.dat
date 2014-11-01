@@ -41,5 +41,13 @@ param ScenarioBasedData := False;
 
 set StageVariables[FirstStage] := 	PutawayFullTimeWorkers
 									PickingFullTimeWorkers;
-set StageVariables[SecondStage] := ;
+set StageVariables[SecondStage] := PutawayPartTimeWorkers[*]
+									PickingPartTimeWorkers[*]
+									ShipmentsWarehouse[*,*]
+									ShipmentsToStore[*,*]
+									ProductInboundWarehouse[*,*,*]
+									ProductOutboundWarehouse[*,*,*]
+									ProductInventoryWarehouse[*,*]
+									ProductInventoryStore[*,*,*]
+									ProductBacklogStore[*,*,*];
 

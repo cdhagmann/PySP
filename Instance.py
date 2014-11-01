@@ -47,7 +47,7 @@ def instance_generator(S,V,P,I,J,T,K):
     products = ["p" + str(p + 1) for p in xrange(P)]
     putaway = ["i" + str(i + 1) for i in xrange(I)]
     picking = ["j" + str(j + 1) for j in xrange(J)]
-    times = ["t" + str(t + 1) for t in xrange(T)]
+    times = [str(t+1) for t in xrange(T)]
     scenarios = ["k" + str(k + 1) for k in xrange(K)]
     times0 = dict(zip(times,times[1:] + times[0:-1]))
 

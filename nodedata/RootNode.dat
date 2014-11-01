@@ -6,12 +6,12 @@ set VENDORS := v1 v2 v3;
 
 set PRODUCTS := p1 p2 p3;
 
-set TIMES := t1 t2 t3;
+set TIMES := 1 2 3;
 
 param T_minus_One :=
-t1 t2
-t2 t3
-t3 t1
+1 2
+2 3
+3 1
 ;
 
 param PutawayAverageWorkload := 45000; 
@@ -30,38 +30,38 @@ param TruckVolume := 15000;
 
 param ProductVolume :=
 p1 0.09
-p2 0.02
-p3 0.08
+p2 0.04
+p3 0.05
 ;
 
 param ProductWeight :=
-p1 0.97
-p2 0.98
-p3 0.94
+p1 0.99
+p2 0.95
+p3 0.98
 ;
 
 param VendorFixedTransportCost :=
-v1 253.17
-v2 97.5
-v3 401.77
+v1 217.05
+v2 110.96
+v3 110.96
 ;
 
 param VendorVariableTransportCost :=
-v1 0.067
-v2 0.042
-v3 0.09
+v1 0.061
+v2 0.045
+v3 0.045
 ;
 
 param StoreFixedTransportCost :=
-s1 110.96
-s2 66.13
-s3 143.71
+s1 143.71
+s2 253.17
+s3 45.59
 ;
 
 param StoreVariableTransportCost :=
-s1 0.045
-s2 0.034
-s3 0.05
+s1 0.05
+s2 0.067
+s3 0.027
 ;
 
 param ProductHoldingCostWarhouse :=
@@ -88,17 +88,17 @@ p2 0.1
 p3 0.1
 ;
 
-param FullTimeLaborCost := 744; 
+param FullTimeLaborCost := 816; 
 
 param PartTimeLaborCost := 168; 
 
 param M := 1000; 
 
-param PutawayRate := 348; 
+param PutawayRate := 647; 
 
-param PickingRate := 624; 
+param PickingRate := 443; 
 
-param PutawayTechCost := 8163; 
+param PutawayTechCost := 9987; 
 
-param PickingTechCost := 9560; 
+param PickingTechCost := 7699; 
 
