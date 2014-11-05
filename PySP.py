@@ -13,12 +13,12 @@ def nd_cat(nf, *ofs):
 def parse_pysp_output(command):
     with temp_file() as temp:
         print '\n'.join(bash_command(command))
-        
+
     if verbose:
         with open(temp, 'rb') as f:
             for line in f:
-                print line   
-            
+                print line
+
     with open(temp, 'rb') as f:
         for line in f:
             if 'THE EXPECTED SUM OF THE STAGE COST VARIABLES=' in line:
@@ -31,26 +31,27 @@ def parse_pysp_output(command):
                 break
         else:
             raise RuntimeError
-            
+
     return OBJ
-    
-        
-def solve_ef_tech_model(idx, solver='gurobi', gap=None, cutoff=None, verbose=False):
+
+
+def solve_ef_tech_model(idx, method='GBB', solver='gurobi',
+                             gap=None, cutoff=None, verbose=False):
     tech = 'Tech{}'.format(idx)
-    nd_cat('RootNode', 'RootNodeBase', tech + 'Node')   
+    nd_cat('RootNode', 'RootNodeBase', tech + 'Node')
     nd_cat('ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructureEF')
 
     cmd = ['runef',
-           '-m models',
-           '-i nodedata',
+           '-m models_{}/models'.format(method),
+           '-i models_{}/nodedata'.format(method),
            '--solver={}'.format(solver),
            '--solver']
-    
+
     basic_command = ' '.join(cmd)
 
     if gap is not None:
         basic_command += ' --solver-options=MIPGap={}'.format(gap)
-    
+
     if cutoff is not None:
         basic_command += ' --solver-options=Cutoff={}'.format(cutoff)
 
@@ -59,27 +60,27 @@ def solve_ef_tech_model(idx, solver='gurobi', gap=None, cutoff=None, verbose=Fal
 
     return tech, None, OBJ
 
-        
-def solve_ph_tech_model(idx, solver='gurobi', verbose=False, WW=False):
+
+def solve_ph_tech_model(idx, method='BigM', solver='gurobi', verbose=False, WW=False):
     tech = 'Tech{}'.format(idx)
-    nd_cat('RootNode', 'RootNodeBase', tech + 'Node')   
+    nd_cat('RootNode', 'RootNodeBase', tech + 'Node')
     nd_cat('ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructurePH')
 
     cmd = ['runph',
-           '-m models',
-           '-i nodedata',
+           '-m models_{}/models'.format(method),
+           '-i models_{}/nodedata'.format(method),
            '--solver={}'.format(solver),
            '--default-rho=1',
            '--async']
-    
+
     if WW:
         cmd += ['--enable-ww-extensions',
                 '--ww-extension-cfgfile=config/wwph.cfg',
                 '--ww-extension-suffixfile=config/wwph.suffixes']
-                
-                       
+
+
     basic_command = ' '.join(cmd)
-    
+
     print basic_command
     OBJ = parse_pysp_output(basic_command)
 
