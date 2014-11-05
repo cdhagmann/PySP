@@ -35,8 +35,8 @@ model.SPT = model.STORES * model.PRODUCTS * model.TIMES
 
 model.Lambda_put = Param(model.PUTAWAY, within=PositiveReals)
 model.Lambda_pick = Param(model.PICKING, within=PositiveReals)
-model.Cth_put = Param(model.PUTAWAY, within=PositiveReals)
-model.Cth_pick = Param(model.PICKING, within=PositiveReals)
+model.Cth_put = Param(model.PUTAWAY, within=NonNegativeIntegers)
+model.Cth_pick = Param(model.PICKING, within=NonNegativeIntegers)
 
 model.A_put = Param(within=PositiveReals)
 model.A_pick = Param(within=PositiveReals)
@@ -68,7 +68,8 @@ model.d_spt = Param(model.STORES, model.PRODUCTS, model.TIMES,
                     within=NonNegativeIntegers)
 
 model.BigM = Param(within=NonNegativeIntegers, initialize=5000)
-
+model.M_alpha = Param(within=NonNegativeIntegers, initialize=500)
+model.M_beta = Param(within=NonNegativeIntegers, initialize=500)
 
 #-----------------------------------------------------------------------------
 #                           DECLARE MODEL VARIABLES
@@ -82,12 +83,22 @@ model.alpha_put = Var(bounds=(0.0, model.M_alpha),
 model.alpha_pick = Var(bounds=(0.0, model.M_alpha),
                        within=NonNegativeIntegers)
 
-model.lambda_put = Var(model.PUTAWAY, within=PositiveReals)
-model.lambda_pick = Var(model.PICKING, within=PositiveReals)
+model.zeta_put = Var(model.PUTAWAY, bounds=(0.0, model.M_alpha),
+                      within=NonNegativeIntegers)
+model.zeta_pick = Var(model.PICKING, bounds=(0.0, model.M_alpha),
+                       within=NonNegativeIntegers)
+
+model.theta_put = Var(model.PUTAWAY, within=Binary)
+model.theta_pick = Var(model.PICKING, within=Binary)
 
 model.beta_put = Var(model.TIMES, bounds=(0.0, model.M_beta),
                      within=NonNegativeIntegers)
 model.beta_pick = Var(model.TIMES, bounds=(0.0, model.M_beta),
+                      within=NonNegativeIntegers)
+
+model.xi_put = Var(model.PUTAWAY, model.TIMES, bounds=(0.0, model.M_beta),
+                     within=NonNegativeIntegers)
+model.xi_pick = Var(model.PICKING, model.TIMES, bounds=(0.0, model.M_beta),
                       within=NonNegativeIntegers)
 
 model.n_vt = Var(model.VENDORS, model.TIMES, within=NonNegativeIntegers)
@@ -115,18 +126,58 @@ model.SecondStageObjective = Constraint(rule=constraints.objectiveC_rule)
 
 model.Constraint1 = Constraint(rule=constraints.constraint1_rule)
 model.Constraint2 = Constraint(rule=constraints.constraint2_rule)
-model.Constraint5 = Constraint(model.PUTAWAY, rule=constraints.constraint5_rule)
-model.Constraint8 = Constraint(model.PICKING, rule=constraints.constraint8_rule)
-model.Constraint15 = Constraint(model.PUTAWAY, model.TIMES,
-                                rule=constraints.constraint15_rule)
-model.Constraint18 = Constraint(model.PICKING, model.TIMES,
-                                rule=constraints.constraint18_rule)
-model.Constraint19 = Constraint(model.TIMES, rule=constraints.constraint19_rule)
-model.Constraint20 = Constraint(model.TIMES, rule=constraints.constraint20_rule)
+model.Constraint4 = Constraint(rule=constraints.constraint4_rule)
+model.Constraint7 = Constraint(rule=constraints.constraint7_rule)
+
+model.Constraint9_LB = Constraint(model.PUTAWAY,
+                                  rule=constraints.constraint9_LB_rule)
+model.Constraint9_UB = Constraint(model.PUTAWAY,
+                                  rule=constraints.constraint9_UB_rule)
+model.Constraint10_LB = Constraint(model.PUTAWAY,
+                                   rule=constraints.constraint10_LB_rule)
+model.Constraint10_UB = Constraint(model.PUTAWAY,
+                                   rule=constraints.constraint10_UB_rule)
+model.Constraint11_LB = Constraint(model.PICKING,
+                                   rule=constraints.constraint11_LB_rule)
+model.Constraint11_UB = Constraint(model.PICKING,
+                                   rule=constraints.constraint11_UB_rule)
+model.Constraint12_LB = Constraint(model.PICKING,
+                                   rule=constraints.constraint12_LB_rule)
+model.Constraint12_UB = Constraint(model.PICKING,
+                                   rule=constraints.constraint12_UB_rule)
+
+model.Constraint14 = Constraint(model.TIMES,
+                                rule=constraints.constraint14_rule)
+model.Constraint17 = Constraint(model.TIMES,
+                                rule=constraints.constraint17_rule)
+model.Constraint19 = Constraint(model.TIMES,
+                                rule=constraints.constraint19_rule)
+model.Constraint20 = Constraint(model.TIMES,
+                                rule=constraints.constraint20_rule)
 model.Constraint21 = Constraint(model.PRODUCTS, model.TIMES,
                                 rule=constraints.constraint21_rule)
-model.Constraint22 = Constraint(rule=constraints.constraint22_rule)
-model.Constraint23 = Constraint(rule=constraints.constraint23_rule)
-model.Constraint24 = Constraint(rule=constraints.constraint24_rule)
+model.Constraint22 = Constraint(model.STORES, model.PRODUCTS, model.TIMES,
+                                rule=constraints.constraint22_rule)
+model.Constraint23 = Constraint(model.VENDORS, model.TIMES,
+                                rule=constraints.constraint23_rule)
+model.Constraint24 = Constraint(model.STORES, model.TIMES,
+                                rule=constraints.constraint24_rule)
 
-model.Objective = Objective(rule=constraint.objective_rule)
+model.Constraint25_LB = Constraint(model.PUTAWAY, model.TIMES,
+                                   rule=constraints.constraint25_LB_rule)
+model.Constraint25_UB = Constraint(model.PUTAWAY, model.TIMES,
+                                   rule=constraints.constraint25_UB_rule)
+model.Constraint26_LB = Constraint(model.PUTAWAY, model.TIMES,
+                                   rule=constraints.constraint26_LB_rule)
+model.Constraint26_UB = Constraint(model.PUTAWAY, model.TIMES,
+                                   rule=constraints.constraint26_UB_rule)
+model.Constraint27_LB = Constraint(model.PICKING, model.TIMES,
+                                   rule=constraints.constraint27_LB_rule)
+model.Constraint27_UB = Constraint(model.PICKING, model.TIMES,
+                                   rule=constraints.constraint27_UB_rule)
+model.Constraint28_LB = Constraint(model.PICKING, model.TIMES,
+                                   rule=constraints.constraint28_LB_rule)
+model.Constraint28_UB = Constraint(model.PICKING, model.TIMES,
+                                   rule=constraints.constraint28_UB_rule)
+
+model.Objective = Objective(rule=constraints.objective_rule)

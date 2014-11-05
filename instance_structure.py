@@ -258,7 +258,7 @@ class InstanceStructure():
                 if mthd == 'GBB':
                     pass
                 elif mthd == 'RLT':
-                    pdat.param_dat(f, 'M_aplha', 200)
+                    pdat.param_dat(f, 'M_alpha', 200)
                     pdat.param_dat(f, 'M_beta', 200)
                 else:
                     pdat.param_dat(f, 'BigM', self.BigM)
@@ -282,7 +282,7 @@ class InstanceStructure():
                 file_name = 'Scenario{}Node'.format(idx+1)
                 with open(mpath(file_name), 'w') as f:
                     f.write('# Demand data for Scenario {}\n\n'.format(idx + 1))
-                    f.write('param Demand :=\n')
+                    f.write('param d_spt :=\n')
                     spt = itertools.product(self.STORES, self.PRODUCTS, self.TIMES)
                     for s, p, t in spt:
                         info = (' '.join([s, p, t]), self.DEMAND[s, p, t, k])
@@ -341,7 +341,7 @@ class InstanceStructure():
 
                 if mthd == 'RLT':
                     SecondStageVariables = ['xi_put[*,*]',
-                                            'xi_pick[*]']
+                                            'xi_pick[*,*]']
 
                 pdat.set_dat(f, 'Stages', stages)
                 pdat.set_dat(f, 'Nodes', nodes)

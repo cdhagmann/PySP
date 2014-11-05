@@ -99,71 +99,63 @@ def constraint8_rule(model, j):
 def constraint9_LB_rule(model, i):
     lower_bound = 0
     expr = model.zeta_put[i]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint9_UB_rule(model, i):
-    lower_bound = None
     expr = model.zeta_put[i]
     upper_bound = model.M_alpha * model.theta_put[i]
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint10_LB_rule(model, i):
     lower_bound = 0
     expr = model.alpha_put - model.zeta_put[i]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint10_UB_rule(model, i):
-    lower_bound = None
     expr = model.alpha_put - model.zeta_put[i]
     upper_bound = model.M_alpha * (1 - model.theta_put[i])
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint11_LB_rule(model, j):
     lower_bound = 0
     expr = model.zeta_pick[j]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint11_UB_rule(model, j):
-    lower_bound = None
     expr = model.zeta_pick[j]
     upper_bound = model.M_alpha * model.theta_pick[j]
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint12_LB_rule(model, j):
     lower_bound = 0
     expr = model.alpha_pick - model.zeta_pick[j]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint12_UB_rule(model, j):
-    lower_bound = None
     expr = model.alpha_pick - model.zeta_pick[j]
     upper_bound = model.M_alpha * (1 - model.theta_pick[j])
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint13_rule(model, t):
     expr1 = sum(model.x_vpt[v, p, t] for v, p in model.VP)
     expr2 = model.Lambda_put * (model.alpha_put +
                                 model.eta_put * model.beta_put[t])
-    return (None, expr1, expr2)
+    return (expr1 <= expr2)
 
 
 def constraint14_rule(model, t):
     expr1 = sum(model.x_vpt[v, p, t] for v, p in model.VP)
     expr2 = sum(model.Lambda_put[i] * (model.zeta_put[i] +
                 model.eta_put * model.xi_put[i, t]) for i in model.PUTAWAY)
-    return (None, expr1, expr2)
+    return (expr1 <= expr2)
 
 
 def constraint15_rule(model, i, t):
@@ -171,21 +163,21 @@ def constraint15_rule(model, i, t):
     expr2 = model.Lambda_put[i] * (model.alpha_put +
                                    model.eta_put * model.beta_put[t])
     upper_bound = model.BigM * (1 - model.theta_put[i])
-    return (None, expr1 - expr2, upper_bound)
+    return (expr1 - expr2 <= upper_bound)
 
 
 def constraint16_rule(model, t):
     expr1 = sum(model.y_spt[s, p, t] for s, p in model.SP)
     expr2 = model.Lambda_pick * (model.alpha_pick +
                                  model.eta_pick * model.beta_pick[t])
-    return (None, expr1, expr2)
+    return (expr1 <= expr2)
 
 
 def constraint17_rule(model, t):
     expr1 = sum(model.y_spt[s, p, t] for s, p in model.SP)
     expr2 = sum(model.Lambda_pick[j] * (model.zeta_pick[j] +
                 model.eta_pick * model.xi_pick[j, t]) for j in model.PICKING)
-    return (None, expr1, expr2)
+    return (expr1 <= expr2)
 
 
 def constraint18_rule(model, j, t):
@@ -193,15 +185,15 @@ def constraint18_rule(model, j, t):
     expr2 = model.Lambda_pick[j] * (model.alpha_pick +
                                    model.eta_pick * model.beta_pick[t])
     upper_bound = model.BigM * (1 - model.theta_pick[j])
-    return (None, expr1 - expr2, upper_bound)
+    return (expr1 - expr2 <= upper_bound)
 
 
 def constraint19_rule(model, t):
-    return (None, model.beta_put[t], model.delta * model.alpha_put)
+    return (model.beta_put[t] <= model.delta * model.alpha_put)
 
 
 def constraint20_rule(model, t):
-    return (None, model.beta_pick[t], model.delta * model.alpha_pick)
+    return (model.beta_pick[t] <= model.delta * model.alpha_pick)
 
 
 def constraint21_rule(model, p, t):
@@ -212,7 +204,7 @@ def constraint21_rule(model, p, t):
     expr2 = sum(model.x_vpt[v, p, t] for v in model.VENDORS) - \
             sum(model.y_spt[s, p, t] for s in model.STORES)
 
-    return (expr1, expr2)
+    return (expr1 == expr2)
 
 
 def constraint22_rule(model, s, p, t):
@@ -223,70 +215,62 @@ def constraint22_rule(model, s, p, t):
     expr2 = model.y_spt[s, p, t] + model.r_spt[s, p, t]
     expr3 = model.d_spt[s, p, t] + model.r_spt[s, p, tau]
 
-    return (expr1, expr2 - expr3)
+    return (expr1 == expr2 - expr3)
 
 
 def constraint23_rule(model, v, t):
     expr = sum(model.V_p[p] * model.x_vpt[v, p, t] for p in model.PRODUCTS)
-    return (None, expr, model.ScriptQ * model.n_vt[v, t])
+    return (expr <= model.ScriptQ * model.n_vt[v, t])
 
 
 def constraint24_rule(model, s, t):
-    expr = sum(model.V_p[p] * model.y_vpt[s, p, t] for p in model.PRODUCTS)
-    return (None, expr, model.ScriptQ * model.n_st[s, t])
+    expr = sum(model.V_p[p] * model.y_spt[s, p, t] for p in model.PRODUCTS)
+    return (expr <= model.ScriptQ * model.n_st[s, t])
 
 
 def constraint25_LB_rule(model, i, t):
     lower_bound = 0
     expr = model.xi_put[i, t]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint25_UB_rule(model, i, t):
-    lower_bound = None
     expr = model.xi_put[i, t]
     upper_bound = model.M_beta * model.theta_put[i]
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint26_LB_rule(model, i, t):
     lower_bound = 0
     expr = model.beta_put[t] - model.xi_put[i, t]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint26_UB_rule(model, i, t):
-    lower_bound = None
     expr = model.beta_put[t] - model.xi_put[i, t]
     upper_bound = model.M_beta * (1 - model.theta_put[i])
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint27_LB_rule(model, j, t):
     lower_bound = 0
     expr = model.xi_pick[j, t]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <= expr)
 
 
 def constraint27_UB_rule(model, j, t):
-    lower_bound = None
     expr = model.xi_pick[j, t]
     upper_bound = model.M_beta * model.theta_pick[j]
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
 
 
 def constraint28_LB_rule(model, j, t):
     lower_bound = 0
     expr = model.beta_pick[t] - model.xi_pick[j, t]
-    upper_bound = None
-    return (lower_bound, expr, upper_bound)
+    return (lower_bound <=  expr)
 
 
 def constraint28_UB_rule(model, j, t):
-    lower_bound = None
     expr = model.beta_pick[t] - model.xi_pick[j, t]
     upper_bound = model.M_beta * (1 - model.theta_pick[j])
-    return (lower_bound, expr, upper_bound)
+    return (expr <= upper_bound)
