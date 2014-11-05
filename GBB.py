@@ -62,7 +62,8 @@ def solve_tech_model(idx, solver='gurobi', gap=None, cutoff=None, verbose=True):
     return OBJ
 
 
-def GBB(solver='gurobi', gap=None, cutoff=True, verbose=False, output=False):
+def GBB(method='EF', solver='gurobi', gap=None, cutoff=True, verbose=False, output=False):
+    assert method == 'EF'
     Times = []
     Techs = []
     Obj = []
@@ -91,7 +92,7 @@ def GBB(solver='gurobi', gap=None, cutoff=True, verbose=False, output=False):
         Times.append(T)
         Techs.append(tech)
 
-        
+
         if type(obj) == str:
             Obj.append(float('inf'))
 
@@ -107,7 +108,6 @@ def GBB(solver='gurobi', gap=None, cutoff=True, verbose=False, output=False):
             print "\tFinished {0:6}: {1:>12} ({2}) [{3:>7} Completed] ({4})".format(*info)
 
     else:
-        print ''
         OBJ = min(Obj)
         if OBJ == float('inf'):
             info = ['None', obj, ptime(sum(Times))]

@@ -5,13 +5,10 @@ import time
 from GBB import GBB
 
 
-def nd_cat(nf, *ofs):
-    if len(ofs) == 1 and hasattr(ofs[0], '__iter__'):
-        nd_cat(nf, *list(ofs[0]))
-    else:
-        new_file = 'nodedata/{}.dat'.format(nf)
-        old_files = ['nodedata/{}.dat'.format(of) for of in ofs]
-        bash.cat(new_file, *old_files)
+def nd_cat(method, nf, *ofs):
+    new_file = 'nodedata/{}.dat'.format(nf)
+    old_files = ['nodedata/{}.dat'.format(of) for of in ofs]
+    bash.cat(new_file, *old_files)
 
 def parse_pysp_output(command, verbose):
     with temp_file() as temp:
@@ -39,7 +36,7 @@ def parse_pysp_output(command, verbose):
     return OBJ
 
 def solve_ef(method='BigM', solver='gurobi', verbose=False):
-    nd_cat('ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructureEF')
+    nd_cat(method, 'ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructureEF')
 
     cmd = ['runef',
            '-m models_{}/models'.format(method),
@@ -55,7 +52,7 @@ def solve_ef(method='BigM', solver='gurobi', verbose=False):
 
 
 def solve_ph(method='BigM', solver='gurobi', verbose=False, WW=False):
-    nd_cat('ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructurePH')
+    nd_cat(method, 'ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructurePH')
 
     cmd = ['runph',
            '-m models_{}/models'.format(method),
