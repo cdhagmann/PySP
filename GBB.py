@@ -62,7 +62,7 @@ def solve_tech_model(idx, solver='gurobi', gap=None, cutoff=None, verbose=True):
     return OBJ
 
 
-def GBB(solver='gurobi', gap=None, cutoff=None, verbose=False):
+def GBB(solver='gurobi', gap=None, cutoff=True, verbose=False, output=False):
     Times = []
     Techs = []
     Obj = []
@@ -91,6 +91,7 @@ def GBB(solver='gurobi', gap=None, cutoff=None, verbose=False):
         Times.append(T)
         Techs.append(tech)
 
+        
         if type(obj) == str:
             Obj.append(float('inf'))
 
@@ -102,10 +103,9 @@ def GBB(solver='gurobi', gap=None, cutoff=None, verbose=False):
             Obj.append(obj)
             info = [tech, curr(obj), curr(min(Obj)), perc(prog), ptime(T)]
 
-        print "\tFinished {0:6}: {1:>12} ({2}) [{3:>7} Completed] ({4})".format(*info)
+        if output:
+            print "\tFinished {0:6}: {1:>12} ({2}) [{3:>7} Completed] ({4})".format(*info)
 
-        with open('results_summary.txt', 'a') as f:
-            f.write("Finished {0:6}: {1:>12} ({2}) [{3:>7} Completed] ({4})\n".format(*info))
     else:
         print ''
         OBJ = min(Obj)

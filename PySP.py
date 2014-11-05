@@ -1,6 +1,9 @@
 from Crispin.bash import bash_command
 from Crispin.context import temp_file
 import Crispin.bash as bash
+import time
+from GBB import GBB
+
 
 def nd_cat(nf, *ofs):
     if len(ofs) == 1 and hasattr(ofs[0], '__iter__'):
@@ -15,6 +18,7 @@ def parse_pysp_output(command, verbose):
         print '\n'.join(bash_command(command))
 
     if verbose:
+        print command
         with open(temp, 'rb') as f:
             for line in f:
                 print line
@@ -34,15 +38,7 @@ def parse_pysp_output(command, verbose):
 
     return OBJ
 
-
-def solve_ef_tech_model(idx, method='GBB', solver='gurobi',
-                             gap=None, cutoff=None, verbose=True):
-
-    if method == 'GBB':
-        tech = 'Tech{}'.format(idx)
-        nd_cat('RootNode', 'RootNodeBase', tech + 'Node')
-    else:
-        tech = None    
+def solve_ef(method='BigM', solver='gurobi', verbose=False):
     nd_cat('ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructureEF')
 
     cmd = ['runef',
@@ -53,21 +49,12 @@ def solve_ef_tech_model(idx, method='GBB', solver='gurobi',
 
     basic_command = ' '.join(cmd)
 
-    if gap is not None:
-        basic_command += ' --solver-options=MIPGap={}'.format(gap)
-
-    if cutoff is not None:
-        basic_command += ' --solver-options=Cutoff={}'.format(cutoff)
-
-    print basic_command
     OBJ = parse_pysp_output(basic_command, verbose)
 
-    return tech, None, OBJ
+    return OBJ
 
 
-def solve_ph_tech_model(idx, method='BigM', solver='gurobi', verbose=True, WW=False):
-    tech = 'Tech{}'.format(idx)
-    nd_cat('RootNode', 'RootNodeBase', tech + 'Node')
+def solve_ph(method='BigM', solver='gurobi', verbose=False, WW=False):
     nd_cat('ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructurePH')
 
     cmd = ['runph',
@@ -82,10 +69,31 @@ def solve_ph_tech_model(idx, method='BigM', solver='gurobi', verbose=True, WW=Fa
                 '--ww-extension-cfgfile=config/wwph.cfg',
                 '--ww-extension-suffixfile=config/wwph.suffixes']
 
-
     basic_command = ' '.join(cmd)
 
-    print basic_command
     OBJ = parse_pysp_output(basic_command, verbose)
 
-    return tech, None, OBJ
+    return OBJ
+
+def RLT(method='PH', solver='gurobi', verbose=False):
+    t1 = time.time()
+    if method.upper() == 'PH':
+        obj = solve_ph('RLT', solver, verbose)
+    elif method.upper() == 'EF':
+        obj = solve_ef('RLT', solver, verbose)
+    t2 = time.time()
+
+    return obj, t2 - t1
+
+def BigM(method='PH', solver='gurobi', verbose=False):
+    t1 = time.time()
+    if method.upper() == 'PH':
+        obj = solve_ph('BigM', solver, verbose)
+    elif method.upper() == 'EF':
+        obj = solve_ef('BigM', solver, verbose)
+    t2 = time.time()
+
+    return obj, t2 - t1
+
+if '__main__' == __name__:
+    T1 = GBB(cutoff=True, gap=.0175)

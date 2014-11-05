@@ -375,4 +375,4 @@ class InstanceStructure():
                 FirstStageVariables = ['alpha_put', 'alpha_pick']
                 Costs = [self.C_ALPHA, self.C_BETA]
                 for idx, fsv in enumerate(FirstStageVariables):
-                    f.write('{}\t{}\t{}\n'.format(fsv, 'CostForRho', Costs[idx]))
+                    f.write('{} {} {}\n'.format(fsv, 'CostForRho', Costs[idx]))

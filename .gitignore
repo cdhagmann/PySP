@@ -58,3 +58,4 @@ temp*
 
 # Pyomo .dat files
 *.dat
+*.pickle
