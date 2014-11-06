@@ -5,9 +5,12 @@ import time
 from GBB import GBB
 
 
-def nd_cat(method, nf, *ofs):
-    new_file = 'nodedata/{}.dat'.format(nf)
-    old_files = ['nodedata/{}.dat'.format(of) for of in ofs]
+def mpath(mthd, archive):
+    return 'models_{}/nodedata/{}.dat'.format(mthd, archive)
+
+def nd_cat(mthd, nf, *ofs):
+    new_file = mpath(mthd, nf)
+    old_files = [mpath(mthd, of) for of in ofs]
     bash.cat(new_file, *old_files)
 
 def parse_pysp_output(command, verbose):
