@@ -6,20 +6,21 @@ from Crispin.bash import id_generator
 from Crispin.context import temp_file
 import Crispin.bash as bash
 
+from numpy import std as stdev
+from numpy import mean
+
 import itertools
 import string
 import random
 import math
 
-mean = lambda l: sum(l)/float(len(l))
-stdev = (lambda s: math.sqrt(mean(map(lambda x: (x - mean(s))**2, s))))
 
 funcs = {'GBB': GBB, 'RLT':RLT, 'BigM': BigM}
 
-SVP = [3]
-IJ = [3,5]
-T = [3]
-K = [5,10]
+SVP = [3, 10]
+IJ = [3, 5, 7, 10]
+T = [3, 7]
+K = [3, 5, 7, 10]
 case_list = list(itertools.product(SVP, SVP, SVP, IJ, T, K))
 case_list = sorted(case_list, key=lambda k: k[3])
 case_list = sorted(case_list, key=lambda k: k[5])
@@ -57,19 +58,31 @@ M2 = 1
 # Code will run N * M1 * M2 times
 
 ID = id_generator()
-print 'TEST ID: {}\n'.format(ID)
-with open('Results/Results_{}.txt'.format(ID), 'w') as f:
-    f.write('TEST ID: {}\n'.format(ID))
 
-for idx,case in enumerate(cases):
+output = 'Results/Results_{}.txt'.format(ID)
+
+def print_to_output(string, mode='ab', tee=False):
+    with open(output, mode) as f:
+        f.write('{0!s}\n'.format(string))
+    if tee:
+        print string
+
+print_to_output('TEST ID: {}\n'.format(ID), 'w', tee=True)
+
+
+for idx, case in enumerate(cases):
     objs = defaultdict(dict)
     times = defaultdict(dict)
-    print "[{}] (Case {} of {}):".format(','.join(map(str,case)),idx+1,N)
+    case_str = ','.join(['{}'] * 7).format(*case)
+    string =  "[{}] (Case {} of {}):".format(case_str, idx + 1, N)
+    print_to_output(string, tee=True)
 
     for m1 in xrange(M1):
         instance = InstanceStructure(*case)
         instance.create_node_data()
         instance.create_scenario_data()
+        string = 'INSTANCE ID: {}'.format(instance.ID)
+        print_to_output(string)
         for m2 in xrange(M2):
             for mthd, app in (('GBB', 'EF'), ('RLT', 'PH'), ('BigM', 'PH')):
                 obj, t = funcs[mthd](app)
@@ -79,9 +92,8 @@ for idx,case in enumerate(cases):
                 print '\tRUN TIME [{0:>4}/{1}]: {2}'.format(mthd, app, ptime(t))
             print
 
-    with open('Results/Results_{}.txt'.format(ID), 'a') as f:
-        f.write("[{}] (Case {} of {}):\n".format(','.join(map(str,case)),idx+1,N))
-        for (app, mthd), d in times.iteritmes:
+    with open(output, 'ab') as f:
+        for (app, mthd), d in times.iteritems():
             thymes = d.values()
             for t in thymes:
                 f.write('\tRUN TIME [{}/{}]: {}\n'.format(mthd, app, t))

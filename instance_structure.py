@@ -13,6 +13,7 @@ import os
 import fileinput
 import shutil
 import pickle
+from Crispin.bash import id_generator
 
 DISTANCE_IN_MILES = [25, 50, 75, 100, 150,
                      200, 250, 300, 350, 400,
@@ -73,6 +74,7 @@ class InstanceStructure():
 
         random.seed(self.seed)
 
+        self.ID = id_generator()
         self.generate_fixed_data()
         self.generate_random_data()
         self.generate_technology_data()
@@ -81,15 +83,15 @@ class InstanceStructure():
         self.write()
 
     @classmethod
-    def from_file(cls, archive):
+    def from_file(cls, ID):
+        archive = 'Instances/instance_{}.pickle'.format(ID)
         if os.path.isfile(archive):
             with open(archive, 'rb') as f:
                 cls = pickle.load(f)
                 return cls
 
     def write(self):
-        self.file_name = self.case + '_' +  str(int(self.seed * 100))
-        archive = 'Instances/instance_{}.pickle'.format(self.file_name)
+        archive = 'Instances/instance_{}.pickle'.format(self.ID)
         with open(archive, 'wb') as f:
             pickle.dump(self, f, protocol=-1)
 
