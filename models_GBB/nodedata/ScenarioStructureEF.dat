@@ -1,0 +1,10 @@
+set StageVariables[SecondStage] := beta_put[*]
+	beta_pick[*]
+	n_vt[*,*]
+	n_st[*,*]
+	x_vpt[*,*,*]
+	y_spt[*,*,*]
+	z_pt[*,*]
+	z_spt[*,*,*]
+	r_spt[*,*,*];
+

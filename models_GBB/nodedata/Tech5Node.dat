@@ -1,0 +1,8 @@
+param Lambda_put := 24986; 
+
+param Lambda_pick := 7382; 
+
+param Cth_put := 754; 
+
+param Cth_pick := 1083; 
+

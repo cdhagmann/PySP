@@ -1,0 +1,3 @@
+set StageVariables[SecondStage] := xi_put[*,*]
+	xi_pick[*,*];
+

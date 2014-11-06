@@ -1,0 +1,32 @@
+# Demand data for Scenario 3
+
+param d_spt :=
+s1 p1 1 125
+s1 p1 2 109
+s1 p1 3 114
+s1 p2 1 55
+s1 p2 2 59
+s1 p2 3 67
+s1 p3 1 65
+s1 p3 2 51
+s1 p3 3 38
+s2 p1 1 98
+s2 p1 2 106
+s2 p1 3 94
+s2 p2 1 72
+s2 p2 2 81
+s2 p2 3 80
+s2 p3 1 23
+s2 p3 2 31
+s2 p3 3 36
+s3 p1 1 77
+s3 p1 2 75
+s3 p1 3 79
+s3 p2 1 52
+s3 p2 2 60
+s3 p2 3 61
+s3 p3 1 52
+s3 p3 2 74
+s3 p3 3 80
+;
+

@@ -1,0 +1,88 @@
+# Case of size [3_3_3_3_3_3_3]
+
+set STORES := s1 s2 s3;
+
+set PRODUCTS := p1 p2 p3;
+
+set VENDORS := v1 v2 v3;
+
+set TIMES := 1 2 3;
+
+param A_put := 50; 
+
+param A_pick := 50; 
+
+param gamma := 1.0; 
+
+param delta := 1.0; 
+
+param eta_put := 1.0; 
+
+param eta_pick := 1.0; 
+
+param ScriptQ := 15000; 
+
+param V_p :=
+p1 0.08
+p2 0.02
+p3 0.04
+;
+
+param W_p :=
+p1 0.94
+p2 0.91
+p3 0.92
+;
+
+param Cf_v :=
+v1 1586.97
+v2 1586.97
+v3 913.7
+;
+
+param Cv_v :=
+v1 0.09
+v2 0.09
+v3 0.055
+;
+
+param Cf_s :=
+s1 708.99
+s2 748.56
+s3 708.99
+;
+
+param Cv_s :=
+s1 0.045
+s2 0.047
+s3 0.045
+;
+
+param Cz_p :=
+p1 0.05
+p2 0.05
+p3 0.05
+;
+
+param Cz_sp :=
+s1 p1 0.05
+s1 p2 0.05
+s1 p3 0.05
+s2 p1 0.05
+s2 p2 0.05
+s2 p3 0.05
+s3 p1 0.05
+s3 p2 0.05
+s3 p3 0.05
+;
+
+param Cr_p :=
+p1 0.1
+p2 0.1
+p3 0.1
+;
+
+param Ca := 768.0; 
+
+param Cb := 168.0; 
+

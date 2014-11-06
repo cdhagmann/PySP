@@ -1,0 +1,152 @@
+# Case of size [3_3_3_3_3_3_3]
+
+set STORES := s1 s2 s3;
+
+set PRODUCTS := p1 p2 p3;
+
+set VENDORS := v1 v2 v3;
+
+set TIMES := 1 2 3;
+
+set PUTAWAY := i1 i2 i3;
+
+set PICKING := j1 j2 j3;
+
+param Lambda_put :=
+i1 5047
+i2 24986
+i3 43727
+;
+
+param Lambda_pick :=
+j1 816
+j2 4885
+j3 7382
+;
+
+param Cth_put :=
+i1 0
+i2 754
+i3 2854
+;
+
+param Cth_pick :=
+j1 26
+j2 459
+j3 1083
+;
+
+param A_put := 50; 
+
+param A_pick := 50; 
+
+param gamma := 1.0; 
+
+param delta := 1.0; 
+
+param eta_put := 1.0; 
+
+param eta_pick := 1.0; 
+
+param ScriptQ := 15000; 
+
+param V_p :=
+p1 0.08
+p2 0.02
+p3 0.04
+;
+
+param W_p :=
+p1 0.94
+p2 0.91
+p3 0.92
+;
+
+param Cf_v :=
+v1 1586.97
+v2 1586.97
+v3 913.7
+;
+
+param Cv_v :=
+v1 0.09
+v2 0.09
+v3 0.055
+;
+
+param Cf_s :=
+s1 708.99
+s2 748.56
+s3 708.99
+;
+
+param Cv_s :=
+s1 0.045
+s2 0.047
+s3 0.045
+;
+
+param Cz_p :=
+p1 0.05
+p2 0.05
+p3 0.05
+;
+
+param Cz_sp :=
+s1 p1 0.05
+s1 p2 0.05
+s1 p3 0.05
+s2 p1 0.05
+s2 p2 0.05
+s2 p3 0.05
+s3 p1 0.05
+s3 p2 0.05
+s3 p3 0.05
+;
+
+param Cr_p :=
+p1 0.1
+p2 0.1
+p3 0.1
+;
+
+param Ca := 768.0; 
+
+param Cb := 168.0; 
+
+param M_alpha := 200; 
+
+param M_beta := 200; 
+
+# Demand data for Scenario 1
+
+param d_spt :=
+s1 p1 1 95
+s1 p1 2 91
+s1 p1 3 84
+s1 p2 1 45
+s1 p2 2 34
+s1 p2 3 65
+s1 p3 1 39
+s1 p3 2 37
+s1 p3 3 24
+s2 p1 1 54
+s2 p1 2 54
+s2 p1 3 52
+s2 p2 1 46
+s2 p2 2 54
+s2 p2 3 54
+s2 p3 1 16
+s2 p3 2 25
+s2 p3 3 25
+s3 p1 1 18
+s3 p1 2 67
+s3 p1 3 30
+s3 p2 1 13
+s3 p2 2 49
+s3 p2 3 40
+s3 p3 1 27
+s3 p3 2 48
+s3 p3 3 63
+;
+
