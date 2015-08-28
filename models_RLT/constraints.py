@@ -1,26 +1,25 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #                              IMPORT MODULES
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
-from coopr.pyomo import *
-from coopr.pyomo import AbstractModel, Set, Param, PositiveReals
-from coopr.pyomo import NonNegativeIntegers, Binary, Var, summation
-#-----------------------------------------------------------------------------
+from pyomo.core import AbstractModel, Set, Param, PositiveReals
+from pyomo.core import NonNegativeIntegers, Binary, Var, summation
+# -----------------------------------------------------------------------------
 #                            MOTIVATION FROM WIFE
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 ''' my husband is amazingly sexy! RAWR!! love, sara '''
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #                               INITIATE MODEL
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 model = AbstractModel()
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #                           DECLARE MODEL PARAMETERS
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Model Indices
 
@@ -33,7 +32,6 @@ model.TIMES = Set()
 model.PICKING = Set()
 model.PUTAWAY = Set()
 
-
 SP = model.STORES * model.PRODUCTS
 VP = model.VENDORS * model.PRODUCTS
 ST = model.STORES * model.TIMES
@@ -41,7 +39,6 @@ PT = model.PRODUCTS * model.TIMES
 VT = model.VENDORS * model.TIMES
 VPT = model.VENDORS * model.PRODUCTS * model.TIMES
 SPT = model.STORES * model.PRODUCTS * model.TIMES
-
 
 model.T_minus_One = Param(model.TIMES)
 
@@ -74,9 +71,9 @@ model.M_alpha = Param(within=NonNegativeIntegers, initialize=50)
 model.M_beta = Param(within=NonNegativeIntegers, initialize=50)
 model.BigM = Param(within=NonNegativeIntegers, initialize=5000)
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #                           DECLARE MODEL VARIABLES
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 model.FirstStageCost = Var()
 model.SecondStageCost = Var()
@@ -117,21 +114,23 @@ model.xi_put = Var(model.PUTAWAY, bounds=(0.0, model.M_alpha),
                    within=NonNegativeIntegers)
 model.xi_pick = Var(model.PICKING, bounds=(0.0, model.M_alpha),
                     within=NonNegativeIntegers)
-#-----------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------
 #                           DECLARE MODEL constraintS
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def _objectiveA_rule(model):
     expr = model.Ca * (model.alpha_put + model.alpha_pick) + \
-          model.Cth_put + model.Cth_pick
+           model.Cth_put + model.Cth_pick
     return (expr, model.FirstStageCost)
 
 
 def _objectiveB_rule(model):
     expr = model.Ca * (model.alpha_put + model.alpha_pick) + \
-          summation(model.Cth_put, model.theta_put) + \
-          summation(model.Cth_pick, model.theta_pick)
+           summation(model.Cth_put, model.theta_put) + \
+           summation(model.Cth_pick, model.theta_pick)
     return (expr, model.FirstStageCost)
 
 
@@ -158,6 +157,7 @@ def _objectiveC_rule(model):
 def _objective_rule(model):
     return model.FirstStageCost + model.SecondStageCost
 
+
 def _constraint1_rule(model):
     return (summation(model.theta_put), 1)
 
@@ -174,31 +174,31 @@ def _constraint3_rule(model):
 
 def _constraint4_rule(model):
     expr = model.gamma * model.A_put - \
-          summation(model.Lambda_put, model.zeta_put)
+           summation(model.Lambda_put, model.zeta_put)
     return (None, expr, 0)
 
 
 def _constraint5_rule(model, i):
     expr = model.gamma * model.A_put * model.theta_put[i] - \
-          model.alpha_put * model.Lambda_put[i]
+           model.alpha_put * model.Lambda_put[i]
     return (None, expr, 0)
 
 
 def _constraint6_rule(model):
     expr = model.gamma * model.A_pick - \
-          model.alpha_pick * model.Lambda_pick
+           model.alpha_pick * model.Lambda_pick
     return (None, expr, 0)
 
 
 def _constraint7_rule(model):
     expr = model.gamma * model.A_pick - \
-          summation(model.Lambda_pick, model.zeta_pick)
+           summation(model.Lambda_pick, model.zeta_pick)
     return (None, expr, 0)
 
 
 def _constraint8_rule(model, j):
     expr = model.gamma * model.A_pick * model.theta_pick[j] - \
-          model.alpha_pick * model.Lambda_pick[j]
+           model.alpha_pick * model.Lambda_pick[j]
     return (None, expr, 0)
 
 
@@ -268,7 +268,7 @@ def _constraint13_rule(model, t):
 def _constraint14_rule(model, t):
     expr1 = sum(model.x_vpt[v, p, t] for v, p in VP)
     expr2 = sum(model.Lambda_put[i] * (model.zeta_put[i] +
-                model.eta_put * model.xi_put[i, t]) for i in model.PUTAWAY)
+                                       model.eta_put * model.xi_put[i, t]) for i in model.PUTAWAY)
     return (None, expr1, expr2)
 
 
@@ -290,14 +290,14 @@ def _constraint16_rule(model, t):
 def _constraint17_rule(model, t):
     expr1 = sum(model.y_spt[s, p, t] for s, p in SP)
     expr2 = sum(model.Lambda_pick[j] * (model.zeta_pick[j] +
-                model.eta_pick * model.xi_pick[j, t]) for j in model.PICKING)
+                                        model.eta_pick * model.xi_pick[j, t]) for j in model.PICKING)
     return (None, expr1, expr2)
 
 
 def _constraint18_rule(model, j, t):
     expr1 = sum(model.y_spt[s, p, t] for s, p in SP)
     expr2 = model.Lambda_pick[j] * (model.alpha_pick +
-                                   model.eta_pick * model.beta_pick[t])
+                                    model.eta_pick * model.beta_pick[t])
     upper_bound = model.BigM * (1 - model.theta_pick[j])
     return (None, expr1 - expr2, upper_bound)
 
@@ -396,18 +396,3 @@ def _constraint28_UB_rule(model, j, t):
     expr = model.beta_pick[t] - model.xi_pick[j, t]
     upper_bound = model.M_beta * (1 - model.theta_pick[j])
     return (lower_bound, expr, upper_bound)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

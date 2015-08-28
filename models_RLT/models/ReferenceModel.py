@@ -1,4 +1,4 @@
-from coopr.pyomo import *
+from pyomo.core import *
 import constraints
 #-----------------------------------------------------------------------------
 #                            MOTIVATION FROM WIFE

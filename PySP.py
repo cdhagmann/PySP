@@ -2,7 +2,7 @@ from Crispin.bash import bash_command
 from Crispin.context import temp_file
 import Crispin.bash as bash
 import time
-from GBB import GBB
+from GBB import GBB, parse_pysp_output
 
 
 def mpath(mthd, archive):
@@ -13,30 +13,6 @@ def nd_cat(mthd, nf, *ofs):
     old_files = [mpath(mthd, of) for of in ofs]
     bash.cat(new_file, *old_files)
 
-def parse_pysp_output(command, verbose):
-    with temp_file() as temp:
-        print '\n'.join(bash_command(command))
-
-    if verbose:
-        print command
-        with open(temp, 'rb') as f:
-            for line in f:
-                print line
-
-    with open(temp, 'rb') as f:
-        for line in f:
-            if 'THE EXPECTED SUM OF THE STAGE COST VARIABLES=' in line:
-                OBJ = float(line.strip('<>\n').split('=')[-1])
-                bash.rm(temp)
-                break
-            elif 'Cutoff' in line:
-                OBJ = 'Cutoff Error'
-                bash.rm(temp)
-                break
-        else:
-            raise RuntimeError, temp
-
-    return OBJ
 
 def solve_ef(method='BigM', solver='gurobi', verbose=False):
     nd_cat(method, 'ScenarioStructure', 'ScenarioStructureBase', 'ScenarioStructureEF')
@@ -62,7 +38,8 @@ def solve_ph(method='BigM', solver='gurobi', verbose=False, WW=False):
            '-i models_{}/nodedata'.format(method),
            '--solver={}'.format(solver),
            '--default-rho=1',
-           '--async']
+           '--async',
+           '--output-solver-logs']
 
     if WW:
         cmd += ['--enable-ww-extensions',
@@ -78,22 +55,26 @@ def solve_ph(method='BigM', solver='gurobi', verbose=False, WW=False):
 def RLT(method='PH', solver='gurobi', verbose=False):
     t1 = time.time()
     if method.upper() == 'PH':
-        obj = solve_ph('RLT', solver, verbose)
+        results = solve_ph('RLT', solver, verbose)
     elif method.upper() == 'EF':
-        obj = solve_ef('RLT', solver, verbose)
+        results = solve_ef('RLT', solver, verbose)
+    else:
+        raise ValueError
     t2 = time.time()
 
-    return obj, t2 - t1
+    return results['obj'], t2 - t1
 
 def BigM(method='PH', solver='gurobi', verbose=False):
     t1 = time.time()
     if method.upper() == 'PH':
-        obj = solve_ph('BigM', solver, verbose)
+        results = solve_ph('BigM', solver, verbose)
     elif method.upper() == 'EF':
-        obj = solve_ef('BigM', solver, verbose)
+        results = solve_ef('BigM', solver, verbose)
+    else:
+        raise ValueError
     t2 = time.time()
 
-    return obj, t2 - t1
+    return results['obj'], t2 - t1
 
 if '__main__' == __name__:
     T1 = GBB(cutoff=True, gap=.0175)

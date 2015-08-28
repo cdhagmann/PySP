@@ -1,21 +1,16 @@
-from instance_structure import InstanceStructure
-from PySP import GBB, RLT, BigM
-from Function_Module import perc, curr, ptime
 from collections import defaultdict
-from Crispin.bash import id_generator
-from Crispin.context import temp_file
-import Crispin.bash as bash
+import itertools
+import string
 
 from numpy import std as stdev
 from numpy import mean
 
-import itertools
-import string
-import random
-import math
+from instance_structure import InstanceStructure
+from PySP import GBB, RLT, BigM
+from Function_Module import curr, ptime
+from Crispin.bash import id_generator
 
-
-funcs = {'GBB': GBB, 'RLT':RLT, 'BigM': BigM}
+funcs = {'GBB': GBB, 'RLT': RLT, 'BigM': BigM}
 
 SVP = [3, 10]
 IJ = [3, 5, 7, 10]
@@ -61,20 +56,21 @@ ID = id_generator()
 
 output = 'Results/Results_{}.txt'.format(ID)
 
+
 def print_to_output(string, mode='ab', tee=False):
     with open(output, mode) as f:
         f.write('{0!s}\n'.format(string))
     if tee:
         print string
 
-print_to_output('TEST ID: {}\n'.format(ID), 'w', tee=True)
 
+print_to_output('TEST ID: {}\n'.format(ID), 'w', tee=True)
 
 for idx, case in enumerate(cases):
     objs = defaultdict(dict)
     times = defaultdict(dict)
     case_str = ','.join(['{}'] * 7).format(*case)
-    string =  "[{}] (Case {} of {}):".format(case_str, idx + 1, N)
+    string = "[{}] (Case {} of {}):".format(case_str, idx + 1, N)
     print_to_output(string, tee=True)
 
     for m1 in xrange(M1):
@@ -84,12 +80,12 @@ for idx, case in enumerate(cases):
         string = 'INSTANCE ID: {}'.format(instance.ID)
         print_to_output(string)
         for m2 in xrange(M2):
-            for mthd, app in (('GBB', 'EF'), ('RLT', 'PH'), ('BigM', 'PH')):
+            for mthd, app in (('RLT', 'PH'), ('BigM', 'PH')):
                 obj, t = funcs[mthd](app)
                 objs[mthd, app][m1, m2] = obj
                 times[mthd, app][m1, m2] = t
 
-                print '\tRUN TIME [{0:>4}/{1}]: {2}'.format(mthd, app, ptime(t))
+                print '\tRUN TIME [{0:>4}/{1}]: {2} ({3})'.format(mthd, app, curr(obj), ptime(t))
             print
 
     with open(output, 'ab') as f:

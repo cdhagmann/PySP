@@ -7,29 +7,31 @@ Created on Tue Nov  4 17:54:32 2014
 
 import random
 import itertools
-import pdat
-import sys
 import os
-import fileinput
 import shutil
 import pickle
-from Crispin.bash import id_generator
+from Crispin.bash import id_generator, cat
+
+import pdat
+
+
 
 DISTANCE_IN_MILES = [25, 50, 75, 100, 150,
                      200, 250, 300, 350, 400,
                      500, 600, 700, 800, 900, 1000, 1100]
 
 FIXED_COST = [40.42, 45.59, 52.27, 66.13, 75.28,
-                   85.67, 97.5, 110.96, 126.26, 143.71,
-                   186.09, 217.05, 253.17, 297.11, 344.43, 401.77, 468.61]
+              85.67, 97.5, 110.96, 126.26, 143.71,
+              186.09, 217.05, 253.17, 297.11, 344.43, 401.77, 468.61]
 
 VARIABLE_FIX = [427.6, 441.14, 482.83, 492.45, 521.43,
-                   541.39, 570.02, 598.03, 622.3, 659.96,
-                   727.61, 802.19, 884.41, 975.07, 1075.01, 1185.2, 1306.68]
+                541.39, 570.02, 598.03, 622.3, 659.96,
+                727.61, 802.19, 884.41, 975.07, 1075.01, 1185.2, 1306.68]
 
 VARIABLE = [0.022, 0.027, 0.029, 0.034, 0.036,
-                 0.041, 0.042, 0.045, 0.047, 0.05,
-                 0.055, 0.061, 0.067, 0.074, 0.081, 0.09, 0.099]
+            0.041, 0.042, 0.045, 0.047, 0.05,
+            0.055, 0.061, 0.067, 0.074, 0.081, 0.09, 0.099]
+
 
 def randomize(number, stdev=.1):
     """
@@ -38,6 +40,7 @@ def randomize(number, stdev=.1):
     """
     random_load = random.normalvariate(number, stdev * number)
     return int(max([0, round(random_load, 0)]))
+
 
 def scale(lower_bound, upper_bound, number):
     """
@@ -48,14 +51,8 @@ def scale(lower_bound, upper_bound, number):
     return [lower_bound + (upper_bound - lower_bound) * g for g in gen]
 
 
-def cat_files(name, filenames):
-    with open(name, 'w') as f:
-        for line in fileinput.input(filenames):
-            f.write(line)
-
 
 class InstanceStructure():
-
     def __init__(self, S, V, P, I, J, T, K, seed=None):
         self.seed = round(1000 * random.random(), 2) if seed is None else seed
 
@@ -77,6 +74,7 @@ class InstanceStructure():
         self.ID = id_generator()
         self.generate_fixed_data()
         self.generate_random_data()
+        self.generate_correlation_matrix()
         self.generate_technology_data()
         self.generate_demand_data()
         self.generate_transportation_data()
@@ -94,6 +92,11 @@ class InstanceStructure():
         archive = 'Instances/instance_{}.pickle'.format(self.ID)
         with open(archive, 'wb') as f:
             pickle.dump(self, f, protocol=-1)
+
+    def generate_correlation_matrix(self):
+        from correlation_matrix import random_correlation_matrix
+        correlation_fraction = 0
+        self.correlation = random_correlation_matrix(self.P, correlation_fraction)
 
     def generate_fixed_data(self):
         self.GAMMA = 1.0
@@ -121,6 +124,11 @@ class InstanceStructure():
             self.VOLUME[p] = round(random.random() * .1 + .01, 2)
             self.WEIGHT[p] = round(random.random() * .1 + .90, 2)
 
+        self.product_list = {}
+        for s in self.STORES:
+            self.product_list[s] = random.sample(self.PRODUCTS, len(self.PRODUCTS)/2)
+
+
     def generate_technology_data(self):
         self.TECH_COST, self.LAMBDA = {}, {}
 
@@ -145,15 +153,27 @@ class InstanceStructure():
         self.Cth_pick = {j: self.TECH_COST[j] for j in self.PICKING}
 
     def generate_demand_data(self):
+        from correlation_matrix import uniform_demand_distribution, neg_binom_demand_distribution
         self.DEMAND = {}
+
         for s in self.STORES:
-            for p in self.PRODUCTS:
-                mu = randomize(self.AVERAGE_LOAD, .4)
-                for t in self.TIMES:
-                    demands = [randomize(mu, .25) for _ in xrange(self.K)]
-                    mu = random.choice(demands)
-                    for k, d in zip(self.SCENARIOS, sorted(demands)):
-                        self.DEMAND[s, p, t, k] = d
+            for k in self.SCENARIOS:
+                demand = uniform_demand_distribution(self.correlation, self.T, 0, int(2 * self.AVERAGE_LOAD / self.P))
+                for j, t in enumerate(self.TIMES):
+                    for i, p in enumerate(self.PRODUCTS):
+                        if p in self.product_list[s]:
+                            self.DEMAND[s,p,t,k] = int(demand[i,j])
+                        else:
+                            self.DEMAND[s,p,t,k] = 0
+        # self.DEMAND = {}
+        # for s in self.STORES:
+        #     for p in self.PRODUCTS:
+        #         mu = randomize(self.AVERAGE_LOAD, .4)
+        #         for t in self.TIMES:
+        #             demands = [randomize(mu, .25) for _ in xrange(self.K)]
+        #             mu = random.choice(demands)
+        #             for k, d in zip(self.SCENARIOS, sorted(demands)):
+        #                 self.DEMAND[s, p, t, k] = d
 
         self.BigM = 0
         for s in self.STORES:
@@ -196,6 +216,8 @@ class InstanceStructure():
         elif isinstance(method, str):
             assert method in ('GBB', 'RLT', 'BigM')
             methods = (method,)
+        else:
+            raise ValueError
 
         for mthd in methods:
             shutil.rmtree('models_{}/nodedata'.format(mthd))
@@ -275,13 +297,15 @@ class InstanceStructure():
         elif isinstance(method, str):
             assert method in ('GBB', 'RLT', 'BigM')
             methods = (method,)
+        else:
+            raise ValueError
 
         for mthd in methods:
             def mpath(archive):
                 return 'models_{}/nodedata/{}.dat'.format(mthd, archive)
 
             for idx, k in enumerate(self.SCENARIOS):
-                file_name = 'Scenario{}Node'.format(idx+1)
+                file_name = 'Scenario{}Node'.format(idx + 1)
                 with open(mpath(file_name), 'w') as f:
                     f.write('# Demand data for Scenario {}\n\n'.format(idx + 1))
                     f.write('param d_spt :=\n')
@@ -294,12 +318,12 @@ class InstanceStructure():
             # Create reference files for checks
             if mthd == 'GBB':
                 filenames = [mpath('RootNodeBase'), mpath('Tech0Node')]
-                cat_files(mpath('RootNode'), filenames)
+                cat(mpath('RootNode'), filenames)
             else:
-                cat_files(mpath('RootNode'), (mpath('RootNodeBase')))
+                cat(mpath('RootNode'), (mpath('RootNodeBase')))
 
             filenames = [mpath('RootNode'), mpath('Scenario1Node')]
-            cat_files(mpath('ReferenceModel'), filenames)
+            cat(mpath('ReferenceModel'), filenames)
 
             # Create the base of the ScenarioStructure file
             with open(mpath('ScenarioStructureBase'), 'w') as f:
@@ -315,10 +339,9 @@ class InstanceStructure():
                     NodeStage[scenario_node] = 'SecondStage'
 
                 nodes = ['RootNode'] + scenarionodes
-                StageCostVariable = {stage:'{}Cost'.format(stage) for stage in stages}
+                StageCostVariable = {stage: '{}Cost'.format(stage) for stage in stages}
 
                 ScenarioLeafNode = dict(zip(self.SCENARIOS, scenarionodes))
-
 
                 FirstStageVariables = ['alpha_put',
                                        'alpha_pick']
@@ -370,7 +393,7 @@ class InstanceStructure():
 
             # Create reference files for check
             filenames = [mpath('ScenarioStructureBase'), mpath('ScenarioStructureEF')]
-            cat_files(mpath('ScenarioStructure'), filenames)
+            cat(mpath('ScenarioStructure'), filenames)
 
             # Create WW config file
             with open('config/wwph.suffixes', 'w') as f:

@@ -2,9 +2,9 @@
 #                              IMPORT MODULES
 #-----------------------------------------------------------------------------
 
-from coopr.pyomo import *
-from coopr.pyomo import AbstractModel, Set, Param, PositiveReals
-from coopr.pyomo import NonNegativeIntegers, Binary, Var, summation
+from pyomo.core import *
+from pyomo.core import AbstractModel, Set, Param, PositiveReals
+from pyomo.core import NonNegativeIntegers, Binary, Var, summation
 #-----------------------------------------------------------------------------
 #                            MOTIVATION FROM WIFE
 #-----------------------------------------------------------------------------

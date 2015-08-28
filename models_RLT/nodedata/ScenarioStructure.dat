@@ -39,6 +39,5 @@ set StageVariables[FirstStage] := 	alpha_put
 		theta_pick[*]
 		zeta_put[*]
 		zeta_pick[*];
-set StageVariables[SecondStage] := xi_put[*,*]
-	xi_pick[*,*];
+set StageVariables[SecondStage] := ;
 

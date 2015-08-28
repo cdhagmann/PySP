@@ -76,7 +76,7 @@ def temp_file():
     with temp_file() as temp:
         foo()
     '''
-    file_handle = 'temp{}'.format(id_generator(10))
+    file_handle = '{}.temp'.format(id_generator(10))
     with Redirect(file_handle):
         yield file_handle
 
